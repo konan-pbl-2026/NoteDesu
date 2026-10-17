@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,7 +94,10 @@ public class MainActivity2 extends AppCompatActivity {
         });
         choiceA.setOnClickListener(view -> choose(StoryEngine.CHOICE_A));
         choiceB.setOnClickListener(view -> choose(StoryEngine.CHOICE_B));
-        endButton.setOnClickListener(view -> finish());
+        endButton.setOnClickListener(view -> {
+            SaveData.clear(this);
+            finish();
+        });
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -114,9 +118,6 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void choose(int choice) {
-        if (typing || choices.getVisibility() != View.VISIBLE) {
-            return;
-        }
         // 連打で同じ選択を繰り返さないよう、画面を切り替える前に無効にします。
         choiceA.setEnabled(false);
         choiceB.setEnabled(false);
@@ -160,12 +161,15 @@ public class MainActivity2 extends AppCompatActivity {
         speaker.setText(name);
         speaker.setVisibility(name.isEmpty() ? View.GONE : View.VISIBLE);
         body = StoryLine.body(lines[state.lineIndex]);
+        // 読み上げでは話す人の名前も一緒に伝えます。
+        text.setContentDescription(name.isEmpty() ? null : name + "、" + body);
         choices.setVisibility(View.GONE);
         endButton.setVisibility(View.GONE);
         nextIndicator.setVisibility(View.GONE);
         nextIndicator.clearAnimation();
 
-        if (showLineImmediately || body.isEmpty()) {
+        // 読み上げ（TalkBack）中は一文字ずつ出すと何度も読み上げられるので、一度に表示します。
+        if (showLineImmediately || body.isEmpty() || isScreenReaderOn()) {
             showLineImmediately = false;
             finishTyping();
         } else {
@@ -175,12 +179,13 @@ public class MainActivity2 extends AppCompatActivity {
             handler.postDelayed(typeNextCharacter, 35);
         }
 
-        if (StoryEngine.isEnding(state.scene)) {
-            SaveData.markEndingSeen(this, state.scene);
-            SaveData.clear(this);
-        } else {
-            SaveData.save(this, state);
-        }
+        // エンディングの途中で閉じても続きから読めるよう、エンディングも保存します。
+        SaveData.save(this, state);
+    }
+
+    private boolean isScreenReaderOn() {
+        AccessibilityManager manager = getSystemService(AccessibilityManager.class);
+        return manager != null && manager.isTouchExplorationEnabled();
     }
 
     private void finishTyping() {
@@ -194,6 +199,8 @@ public class MainActivity2 extends AppCompatActivity {
         if (state.lineIndex < lines.length - 1) {
             nextIndicator.setVisibility(View.VISIBLE);
         } else if (StoryEngine.isEnding(state.scene)) {
+            // 最後のページまで読んだ時点で、エンディングを見たことにします。
+            SaveData.markEndingSeen(this, state.scene);
             endButton.setVisibility(View.VISIBLE);
         } else if (StoryEngine.hasChoices(state.scene)) {
             choiceA.setText(StoryData.choiceARes(state.scene));
@@ -230,8 +237,6 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         handler.removeCallbacksAndMessages(null);
-        background.animate().cancel();
-        character.animate().cancel();
         super.onDestroy();
     }
 

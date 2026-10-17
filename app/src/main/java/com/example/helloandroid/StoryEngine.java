@@ -1,6 +1,7 @@
 package com.example.helloandroid;
 
 public class StoryEngine {
+    // 場面の番号はセーブデータにそのまま保存されるので、既存の番号は変えないこと。
     public static final int S1_CLASSROOM = 1;
     public static final int S2_KONBINI = 2;
     public static final int S3_DETECTIVE = 3;

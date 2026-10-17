@@ -131,6 +131,7 @@ public class StoryData {
     }
 
     public static int characterRes(int scene) {
+        // 立ち絵がない場面は 0 を返します。
         switch (scene) {
             case StoryEngine.S1_PICKED:
             case StoryEngine.S2_AFTER:
@@ -140,24 +141,8 @@ public class StoryData {
                 return R.drawable.shinigami;
             case StoryEngine.S6_DECISION:
                 return R.drawable.note_item;
-            case StoryEngine.S1_CLASSROOM:
-            case StoryEngine.S1_REFUSE:
-            case StoryEngine.S2_KONBINI:
-            case StoryEngine.S3_BROADCAST:
-            case StoryEngine.S3_BAIT_TAKEN:
-            case StoryEngine.S3_BAIT_IGNORED:
-            case StoryEngine.S3_DETECTIVE:
-            case StoryEngine.S4_SNACK:
-            case StoryEngine.S4_CHIPS:
-            case StoryEngine.S4_ONIGIRI:
-            case StoryEngine.S5_CAMPUS:
-            case StoryEngine.S5_YAOYA:
-            case StoryEngine.END_NOT_PICKED:
-            case StoryEngine.END_INNOCENT:
-            case StoryEngine.END_ARREST:
-                return 0;
             default:
-                throw new IllegalArgumentException("場面が不正です: " + scene);
+                return 0;
         }
     }
 

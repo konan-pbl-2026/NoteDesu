@@ -24,7 +24,7 @@ public class SaveData {
     static boolean load(Context context, GameState state) {
         SharedPreferences saved = preferences(context);
         int scene = saved.getInt("scene", 0);
-        if (!StoryEngine.isValidScene(scene) || StoryEngine.isEnding(scene)) {
+        if (!StoryEngine.isValidScene(scene)) {
             clear(context);
             return false;
         }

@@ -1,5 +1,6 @@
 package com.example.helloandroid;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     private Button continueButton;
     private TextView endingCount;
+    private boolean opening;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,24 +24,42 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SaveData.clear(MainActivity.this);
-                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                startActivity(intent);
+                if (!SaveData.hasSave(MainActivity.this)) {
+                    openStory(false);
+                    return;
+                }
+                // 続きのデータを消してしまう前に確認します。
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.confirm_new_game_title)
+                        .setMessage(R.string.confirm_new_game_message)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> openStory(false))
+                        .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                intent.putExtra("continue", true);
-                startActivity(intent);
+                openStory(true);
             }
         });
+    }
+
+    private void openStory(boolean continueGame) {
+        // 連打でストーリー画面が二重に開かないようにします。onResume で戻します。
+        if (opening) {
+            return;
+        }
+        opening = true;
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra("continue", continueGame);
+        startActivity(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        opening = false;
         continueButton.setVisibility(SaveData.hasSave(this) ? View.VISIBLE : View.GONE);
         int seen = SaveData.seenEndingCount(this);
         endingCount.setText(getString(R.string.ending_count, seen, StoryEngine.ENDINGS.length));

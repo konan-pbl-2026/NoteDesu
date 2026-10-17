@@ -97,7 +97,7 @@ afconvert -f m4af -d aac -b 96000 in.wav out.m4a
 
 ## 素材とライセンス
 
-- フォント：**Zen Old Mincho Medium**。SIL Open Font License 1.1（`licenses/ZenOldMincho-OFL.txt`）。
+- フォント：**Zen Old Mincho Medium**。SIL Open Font License 1.1（`licenses/ZenOldMincho-OFL.txt`）。容量削減のため、かな・記号・JIS 第1水準漢字と本文で使う文字だけに絞ったサブセット（5.5MB → 2.2MB）。入っていない漢字は端末の標準フォントで表示される。
 - 背景 `classroom_day` / `konbini_night` / `room_night` / `kitchen_night` / `yaoya` / `city_screen_night` / `living_night` / `campus_day` / `rooftop_night` / `apple_night` / `arrest_night` は、このプロジェクト用に OpenAI の画像生成で作成したオリジナル画像。
 - `haikei_sora.webp` と `home_visual.jpg` はチームの既存画像。
 - `shinigami.webp` と `note_item.webp` はチーム提供のオリジナルイラスト。

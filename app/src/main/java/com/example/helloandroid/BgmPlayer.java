@@ -17,6 +17,11 @@ public class BgmPlayer {
             return;
         }
         currentResId = resId;
+        // エラー後は次の play() で作り直せるよう、壊れたプレーヤーを捨てます。
+        player.setOnErrorListener((mp, what, extra) -> {
+            stop();
+            return true;
+        });
         player.setLooping(true);
         player.setVolume(0.6f, 0.6f);
         player.start();

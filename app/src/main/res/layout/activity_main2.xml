@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/haikei_sora" />
+        tools:srcCompat="@drawable/haikei_sora" />
 
     <View
         android:id="@+id/overlay"
@@ -53,6 +53,7 @@
     <!-- 幅は画面に合わせ、高さは文章量と端末の文字サイズに合わせて伸びる -->
     <TextView
         android:id="@+id/text1"
+        android:accessibilityLiveRegion="polite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"

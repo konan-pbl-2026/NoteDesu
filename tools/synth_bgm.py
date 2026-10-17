@@ -92,7 +92,7 @@ def dark():
         if b % 2 == 1:
             for i in range(3):
                 tr.add(b * 4 * beat + i * beat * 1.33, bell(midi(box[(b + i) % 8]), 3.0, 0.11))
-        tr.add(b * 4 * beat + 3.5 * beat, fft_filter(noise_hit(1.5, 0.05, 2.5), lo=2000, hi=6000) if False else noise_hit(0.8, 0.012, 4))
+        tr.add(b * 4 * beat + 3.5 * beat, noise_hit(0.8, 0.012, 4))
     x = tr.buf * (1 + 0.15 * np.sin(2 * np.pi * np.arange(tr.n) / tr.n * 8))
     return reverb(fft_filter(x, lo=30, hi=3800), 4.0, 0.45)
 
