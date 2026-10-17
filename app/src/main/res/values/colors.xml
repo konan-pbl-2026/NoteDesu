@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 背景が明るくても白文字が読めるよう、暗い半透明にしている -->
+    <color name="text_box">#CC0B0B12</color>
 </resources>
