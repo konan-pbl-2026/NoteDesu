@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 背景が明るくても白文字が読めるよう、暗い半透明にしている -->
+    <color name="text_box">#CC0B0B12</color>
+    <color name="ink">#FF0B0B12</color>
+    <color name="crimson">#FFB3122E</color>
+    <color name="crimson_light">#FFFF4D5E</color>
+    <color name="text_box_border">#80B3122E</color>
+    <color name="button_fill">#B30B0B12</color>
+    <color name="button_pressed">#66B3122E</color>
+    <color name="text_main">#FFF2EEE8</color>
 </resources>
