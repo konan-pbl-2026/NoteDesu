@@ -104,6 +104,15 @@ public class MainActivity2 extends AppCompatActivity {
         } else {
             nextIndicator.setVisibility(View.VISIBLE);
         }
+
+        if (nextIndicator.getVisibility() == View.VISIBLE) {
+            if (nextIndicator.getAnimation() == null) {
+                nextIndicator.startAnimation(
+                        android.view.animation.AnimationUtils.loadAnimation(this, R.anim.blink));
+            }
+        } else {
+            nextIndicator.clearAnimation();
+        }
     }
 
     @Override

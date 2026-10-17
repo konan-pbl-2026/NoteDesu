@@ -2,19 +2,28 @@ package com.example.helloandroid;
 
 public class StoryData {
     public static int backgroundRes(int scene) {
-        // 背景画像は後のPRで差し替えるため、今は全場面で同じ画像を使います。
+        // 「普通の生活」に戻るエンディングでは、意図的に明るい空を使います。
         switch (scene) {
             case StoryEngine.S1_CLASSROOM:
+                return R.drawable.classroom_day;
             case StoryEngine.S2_KONBINI:
+                return R.drawable.konbini_night;
             case StoryEngine.S3_DETECTIVE:
+                return R.drawable.room_night;
             case StoryEngine.S4_SNACK:
+                return R.drawable.kitchen_night;
             case StoryEngine.S5_YAOYA:
+                return R.drawable.yaoya;
             case StoryEngine.S6_DECISION:
+                return R.drawable.room_night;
             case StoryEngine.END_NOT_PICKED:
-            case StoryEngine.END_MASTERMIND:
-            case StoryEngine.END_INNOCENT:
-            case StoryEngine.END_ARREST:
                 return R.drawable.haikei_sora;
+            case StoryEngine.END_MASTERMIND:
+                return R.drawable.room_night;
+            case StoryEngine.END_INNOCENT:
+                return R.drawable.haikei_sora;
+            case StoryEngine.END_ARREST:
+                return R.drawable.room_night;
             default:
                 throw new IllegalArgumentException("場面が不正です: " + scene);
         }

@@ -21,6 +21,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/haikei_sora" />
 
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_overlay"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- 幅は画面に合わせ、高さは文章量と端末の文字サイズに合わせて伸びる -->
     <TextView
         android:id="@+id/text1"
@@ -29,11 +40,15 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="24dp"
-        android:background="@color/text_box"
+        android:background="@drawable/bg_text_box"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.5"
         android:minLines="4"
-        android:padding="16dp"
-        android:textColor="@color/white"
-        android:textSize="17sp"
+        android:paddingStart="18dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="22dp"
+        android:textAppearance="@style/TextAppearance.NoteDesu.Story"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -53,30 +68,27 @@
 
         <Button
             android:id="@+id/choiceA"
+            style="@style/Widget.NoteDesu.Button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:textSize="18sp" />
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/choiceB"
+            style="@style/Widget.NoteDesu.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:minHeight="56dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="12dp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/endButton"
+        style="@style/Widget.NoteDesu.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
-        android:minHeight="56dp"
         android:text="@string/back_to_title"
-        android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/text1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,11 +98,11 @@
         android:id="@+id/nextIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@string/tap_to_continue_description"
         android:text="@string/next_indicator"
-        android:textColor="@color/white"
+        android:textColor="@color/crimson_light"
         android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/text1"
