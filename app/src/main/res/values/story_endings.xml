@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_end_not_picked_lines">
+        <item>僕はノートから目をそらした。</item>
+        <item>何事もない毎日が、これからも続いていく。</item>
+        <item>END1　いつもの日常</item>
+    </string-array>
+    <string-array name="story_end_mastermind_lines">
+        <item>ノートを手放し、僕はすべてを忘れた。……はずだった。</item>
+        <item>机の上の赤いリンゴを見た瞬間、記憶がよみがえる。</item>
+        <item>すべて、思い出した。</item>
+        <item>END　黒幕</item>
+    </string-array>
+    <string-array name="story_end_innocent_lines">
+        <item>ノートを手放し、僕はすべてを忘れた。</item>
+        <item>疑いは完全に晴れ、僕はただの大学生に戻った。</item>
+        <item>END　潔白</item>
+    </string-array>
+    <string-array name="story_end_arrest_lines">
+        <item>疑いは日に日に強まっていった。</item>
+        <item>ついに探偵はノートの存在を突き止めた。</item>
+        <item>「あなたがキラですね。」僕は逮捕された。</item>
+        <item>END　逮捕</item>
+    </string-array>
+</resources>

@@ -2,4 +2,11 @@
     <string name="app_name">NoteDesu.</string>
     <string name="start">はじめる</string>
     <string name="title_image_description">NoteDesu. タイトル画面</string>
+    <string name="back_to_title">タイトルへ戻る</string>
+    <string name="confirm_exit_title">タイトルに戻りますか？</string>
+    <string name="confirm_exit_message">ここまでの進行は失われます。</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="tap_to_continue_description">タップして次へ</string>
+    <string name="next_indicator">▼</string>
 </resources>

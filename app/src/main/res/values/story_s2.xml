@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_s2_lines">
+        <item>深夜のコンビニ。店の前で、男がしつこく女性に絡んでいる。</item>
+        <item>僕はポケットの中のノートを握りしめた。</item>
+        <item>震える手で、男の名前を書き込む。</item>
+        <item>しばらくして、男は胸を押さえて倒れた。</item>
+        <item>それ以来、僕は名前を書き続けた。</item>
+    </string-array>
+</resources>

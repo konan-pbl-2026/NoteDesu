@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_s6_lines">
+        <item>追い詰められた。このままでは捕まる。</item>
+        <item>ノートを手放せば、ノートに関する記憶はすべて消える。</item>
+        <item>そうすれば、捜査から逃れられるかもしれない。</item>
+    </string-array>
+    <string name="story_s6_choice_a">ノートを破棄する</string>
+    <string name="story_s6_choice_b">ノートを破棄しない</string>
+</resources>

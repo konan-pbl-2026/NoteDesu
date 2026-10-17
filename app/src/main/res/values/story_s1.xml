@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_s1_lines">
+        <item>「……退屈だ。」授業中、僕はぼんやりと窓の外を眺めていた。</item>
+        <item>ふと足元を見ると、見慣れない黒いノートが落ちている。</item>
+        <item>表紙には何も書かれていない。誰のものだろう。</item>
+    </string-array>
+    <string name="story_s1_choice_a">拾う</string>
+    <string name="story_s1_choice_b">拾わない</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_s3_lines">
+        <item>不可解な死が続き、世間はその犯人を「キラ」と呼び始めた。</item>
+        <item>ついに、一人の探偵が捜査に乗り出した。</item>
+        <item>「捜査情報が漏れている。」探偵は、捜査本部長である僕の父の家族に目をつけた。</item>
+        <item>その夜から、僕の部屋には盗聴器と監視カメラが仕掛けられた。</item>
+    </string-array>
+</resources>

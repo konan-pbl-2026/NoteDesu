@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_s4_lines">
+        <item>部屋の様子が、どこかおかしい。誰かに見られている気がする。</item>
+        <item>何事もないふりをして、夜食を食べることにした。</item>
+    </string-array>
+    <string name="story_s4_choice_a">ポテトチップスを手に取る</string>
+    <string name="story_s4_choice_b">おにぎりを手に取る</string>
+</resources>

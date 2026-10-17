@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仮テキストです。コンテンツ班が自由に書き換えてください。1ページ60文字以内を目安に。' は \' 、& は &amp; と書く。改行は \n。 -->
+<resources>
+    <string-array name="story_s5_lines">
+        <item>捜査が進み、一度は晴れた疑いが再び僕に向けられた。</item>
+        <item>対策を考えながら、僕は町へ散歩に出た。</item>
+        <item>気がつくと八百屋の前にいた。赤く実ったリンゴが目に入る。</item>
+    </string-array>
+    <string name="story_s5_choice_a">リンゴを買う</string>
+    <string name="story_s5_choice_b">リンゴを買わない</string>
+</resources>
