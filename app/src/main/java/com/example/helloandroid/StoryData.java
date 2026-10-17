@@ -19,7 +19,7 @@ public class StoryData {
                 return R.drawable.room_night;
             case StoryEngine.S3_BROADCAST:
             case StoryEngine.S3_BAIT_TAKEN:
-                return R.drawable.city_screen_night;
+                return R.drawable.city_vision_night;
             case StoryEngine.S3_DETECTIVE:
                 return R.drawable.living_night;
             case StoryEngine.S4_SNACK:
