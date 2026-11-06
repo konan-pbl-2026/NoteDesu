@@ -6,9 +6,9 @@
 
 ## 開発環境
 
-- Android Studio **2026.1.4 以上**（AGP 9.4.1 / Gradle 9.6.0）
-- Gradle JDK **17 以上**。Studio 同梱の JDK でよい。
-- **古い Android Studio では開けないため、その場合は相談すること。**
+- Android Studio **Flamingo (2022.2.1) 以上**（AGP 8.0.2 / Gradle 8.0）
+- compileSdk / targetSdk **33**（Android 13）。SDK Manager で Android 13 (API 33) を入れておくこと。
+- Gradle JDK **17**。Studio 同梱の JDK でよい（Gradle 8.0 は JDK 20 以降では動かない）。
 
 ## ビルド・テスト・lint
 
