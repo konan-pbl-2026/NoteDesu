@@ -32,10 +32,14 @@ public class MainActivity2 extends AppCompatActivity {
     private boolean showLineImmediately;
     private int displayedScene;
     private int displayedCharacter;
+    private StoryLogStore storyLog;
 
     private final Runnable typeNextCharacter = new Runnable() {
         @Override
         public void run() {
+            if (isStoryLogOpen()) {
+                return;
+            }
             // サロゲートペアを途中で分けず、絵文字も一文字として表示します。
             visibleCharacters = body.offsetByCodePoints(visibleCharacters, 1);
             text.setText(body.substring(0, visibleCharacters));
@@ -52,6 +56,7 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        storyLog = new StoryLogStore(this);
 
         background = findViewById(R.id.imageView);
         character = findViewById(R.id.character);
@@ -68,13 +73,18 @@ public class MainActivity2 extends AppCompatActivity {
             state.lineIndex = savedInstanceState.getInt("lineIndex", 0);
             state.ateOnigiri = savedInstanceState.getBoolean("ateOnigiri", false);
             state.boughtApple = savedInstanceState.getBoolean("boughtApple", false);
+            storyLog.restoreTo(state.scene, state.lineIndex);
             showLineImmediately = true;
         } else if (getIntent().getBooleanExtra("continue", false)) {
             if (!SaveData.load(this, state)) {
                 state.reset();
+                storyLog.clear();
+            } else {
+                storyLog.restoreTo(state.scene, state.lineIndex);
             }
         } else {
             SaveData.clear(this);
+            storyLog.clear();
         }
 
         findViewById(R.id.root).setOnClickListener(view -> {
@@ -121,6 +131,9 @@ public class MainActivity2 extends AppCompatActivity {
         // 連打で同じ選択を繰り返さないよう、画面を切り替える前に無効にします。
         choiceA.setEnabled(false);
         choiceB.setEnabled(false);
+        storyLog.recordChoice(state.scene, state.lineIndex, getString(
+                choice == StoryEngine.CHOICE_A
+                        ? StoryData.choiceARes(state.scene) : StoryData.choiceBRes(state.scene)));
         state.scene = StoryEngine.choose(state.scene, choice, state);
         state.lineIndex = 0;
         render();
@@ -161,6 +174,7 @@ public class MainActivity2 extends AppCompatActivity {
         speaker.setText(name);
         speaker.setVisibility(name.isEmpty() ? View.GONE : View.VISIBLE);
         body = StoryLine.body(lines[state.lineIndex]);
+        storyLog.recordLine(state.scene, state.lineIndex, lines[state.lineIndex]);
         // 読み上げでは話す人の名前も一緒に伝えます。
         text.setContentDescription(name.isEmpty() ? null : name + "、" + body);
         choices.setVisibility(View.GONE);
@@ -186,6 +200,38 @@ public class MainActivity2 extends AppCompatActivity {
     private boolean isScreenReaderOn() {
         AccessibilityManager manager = getSystemService(AccessibilityManager.class);
         return manager != null && manager.isTouchExplorationEnabled();
+    }
+
+    /** ログボタンの担当者は、クリック時にこのメソッドを呼んでください。 */
+    public void showStoryLog() {
+        if (isFinishing() || getSupportFragmentManager().isStateSaved() || isStoryLogOpen()) {
+            return;
+        }
+        handler.removeCallbacks(typeNextCharacter);
+        nextIndicator.clearAnimation();
+        new StoryLogDialogFragment().showNow(
+                getSupportFragmentManager(), StoryLogDialogFragment.TAG);
+    }
+
+    /** XML の android:onClick="showStoryLog" からも呼び出せます。 */
+    public void showStoryLog(View view) {
+        showStoryLog();
+    }
+
+    private boolean isStoryLogOpen() {
+        return getSupportFragmentManager().findFragmentByTag(StoryLogDialogFragment.TAG) != null;
+    }
+
+    void onStoryLogDismissed() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (typing) {
+            handler.removeCallbacks(typeNextCharacter);
+            handler.postDelayed(typeNextCharacter, 35);
+        } else if (lines != null) {
+            showLineActions();
+        }
     }
 
     private void finishTyping() {
@@ -237,6 +283,9 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         handler.removeCallbacksAndMessages(null);
+        if (storyLog != null) {
+            storyLog.close();
+        }
         super.onDestroy();
     }
 

@@ -13,4 +13,8 @@
     <string name="next_indicator">▼</string>
     <string name="confirm_new_game_title">はじめから始めますか？</string>
     <string name="confirm_new_game_message">保存されている続きのデータは消えます。</string>
+    <string name="story_log_title">ストーリーログ</string>
+    <string name="story_log_answer">選択した回答</string>
+    <string name="story_log_empty">まだログがありません。</string>
+    <string name="story_log_close">閉じる</string>
 </resources>

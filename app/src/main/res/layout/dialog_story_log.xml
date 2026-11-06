@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_text_box"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/storyLogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/story_log_title"
+            android:textAppearance="@style/TextAppearance.NoteDesu.Story"
+            android:textSize="22sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp">
+
+            <ListView
+                android:id="@+id/storyLogList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/text_box_border"
+                android:dividerHeight="1dp"
+                android:saveEnabled="true"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@+id/storyLogEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/story_log_empty"
+                android:textAppearance="@style/TextAppearance.NoteDesu.Story" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/closeStoryLog"
+            style="@style/Widget.NoteDesu.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/story_log_close" />
+    </LinearLayout>
+</FrameLayout>
