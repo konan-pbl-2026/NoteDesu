@@ -25,4 +25,8 @@
         <item>第五章　探偵との対面</item>
         <item>第六章　決断</item>
     </string-array>
+    <string name="story_log_title">ストーリーログ</string>
+    <string name="story_log_answer">選択した回答</string>
+    <string name="story_log_empty">まだログがありません。</string>
+    <string name="story_log_close">閉じる</string>
 </resources>
