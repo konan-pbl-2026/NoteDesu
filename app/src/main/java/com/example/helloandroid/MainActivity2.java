@@ -124,6 +124,11 @@ public class MainActivity2 extends AppCompatActivity {
                         .show();
             }
         });
+        // 動作確認用：背景の長押しでログを開く
+        findViewById(R.id.root).setOnLongClickListener(view -> {
+            showStoryLog();
+            return true;
+        });
         render();
     }
 
