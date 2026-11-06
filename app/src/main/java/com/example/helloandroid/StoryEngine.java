@@ -28,6 +28,58 @@ public class StoryEngine {
             END_NOT_PICKED, END_MASTERMIND, END_INNOCENT, END_ARREST
     };
 
+    // ★追加: 「つづきから」のシーン選択に出す、各章の最初の場面。
+    // strings.xml の chapter_titles と同じ順に並べること。
+    public static final int[] CHAPTER_STARTS = {
+            S1_CLASSROOM, S2_KONBINI, S3_BROADCAST, S4_SNACK, S5_CAMPUS, S6_DECISION
+    };
+
+    // ★追加: 場面が何章に属するか(1〜6)。エンディングは 0。
+    public static int chapterOf(int scene) {
+        switch (scene) {
+            case S1_CLASSROOM:
+            case S1_REFUSE:
+            case S1_PICKED:
+                return 1;
+            case S2_KONBINI:
+            case S2_AFTER:
+                return 2;
+            case S3_BROADCAST:
+            case S3_BAIT_TAKEN:
+            case S3_BAIT_IGNORED:
+            case S3_DETECTIVE:
+                return 3;
+            case S4_SNACK:
+            case S4_CHIPS:
+            case S4_ONIGIRI:
+                return 4;
+            case S5_CAMPUS:
+            case S5_YAOYA:
+            case S5_APPLE:
+            case S5_NO_APPLE:
+                return 5;
+            case S6_DECISION:
+                return 6;
+            default:
+                return 0;
+        }
+    }
+
+    // ★追加: from から to へ進んだ結果クリアになる章(1〜6)を返す。クリアにならなければ 0。
+    // 次の章へ進んだとき、または第六章から結末へ進んだときだけクリアとする。
+    // 第一章で拾わずに終わる結末(END_NOT_PICKED)は、第一章のクリアに数えない。
+    public static int clearedChapter(int from, int to) {
+        int fromChapter = chapterOf(from);
+        if (fromChapter == 0) {
+            return 0;
+        }
+        int toChapter = chapterOf(to);
+        if (toChapter == 0) {
+            return fromChapter == CHAPTER_STARTS.length ? fromChapter : 0;
+        }
+        return toChapter > fromChapter ? fromChapter : 0;
+    }
+
     public static final int CHOICE_A = 0;
     public static final int CHOICE_B = 1;
 

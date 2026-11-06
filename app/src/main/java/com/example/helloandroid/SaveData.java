@@ -36,13 +36,34 @@ public class SaveData {
     }
 
     static void clear(Context context) {
-        // エンディングの収集記録は、新しく始めても残します。
+        // エンディングの収集記録と章のクリア記録は、新しく始めても残します。
         preferences(context).edit()
                 .remove("scene")
                 .remove("lineIndex")
                 .remove("ateOnigiri")
                 .remove("boughtApple")
                 .apply();
+    }
+
+    // ★追加: 章をクリアしたことを記録します。chapter は 1〜6。
+    static void markChapterCleared(Context context, int chapter) {
+        preferences(context).edit().putBoolean("chapter_cleared_" + chapter, true).apply();
+    }
+
+    // ★追加: 章ごとのクリア状況(index 0 が第一章)。記録に加えて、以前のバージョンで保存された
+    // 続きの位置からも「それより前の章はクリア済み」とみなします。
+    static boolean[] clearedChapters(Context context) {
+        SharedPreferences saved = preferences(context);
+        boolean[] cleared = new boolean[StoryEngine.CHAPTER_STARTS.length];
+        int savedScene = saved.getInt("scene", 0);
+        int savedChapter = StoryEngine.chapterOf(savedScene);
+        boolean savedAfterLastChapter = savedScene == StoryEngine.END_MASTERMIND
+                || savedScene == StoryEngine.END_INNOCENT || savedScene == StoryEngine.END_ARREST;
+        for (int i = 0; i < cleared.length; i++) {
+            cleared[i] = saved.getBoolean("chapter_cleared_" + (i + 1), false)
+                    || i + 1 < savedChapter || savedAfterLastChapter;
+        }
+        return cleared;
     }
 
     static void markEndingSeen(Context context, int ending) {

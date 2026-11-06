@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private Button continueButton;
     private TextView endingCount;
@@ -21,31 +24,51 @@ public class MainActivity extends AppCompatActivity {
         Button startButton = findViewById(R.id.start);
         continueButton = findViewById(R.id.continueButton);
         endingCount = findViewById(R.id.endingCount);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!SaveData.hasSave(MainActivity.this)) {
-                    openStory(false);
-                    return;
-                }
-                // 続きのデータを消してしまう前に確認します。
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(R.string.confirm_new_game_title)
-                        .setMessage(R.string.confirm_new_game_message)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> openStory(false))
-                        .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())
-                        .show();
+        startButton.setOnClickListener(view -> {
+            if (!SaveData.hasSave(MainActivity.this)) {
+                openStory(false, 0);
+                return;
             }
+            // 続きのデータを消してしまう前に確認します。
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.confirm_new_game_title)
+                    .setMessage(R.string.confirm_new_game_message)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> openStory(false, 0))
+                    .setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss())
+                    .show();
         });
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openStory(true);
-            }
-        });
+        continueButton.setOnClickListener(view -> showContinueDialog());
     }
 
-    private void openStory(boolean continueGame) {
+    // 「前回の続きから」と、クリア済みの章を並べて選ばせます。
+    private void showContinueDialog() {
+        String[] chapters = getResources().getStringArray(R.array.chapter_titles);
+        boolean[] cleared = SaveData.clearedChapters(this);
+        List<String> items = new ArrayList<>();
+        List<Integer> scenes = new ArrayList<>();
+        items.add(getString(R.string.continue_from_last));
+        scenes.add(0);
+        for (int i = 0; i < chapters.length; i++) {
+            if (cleared[i]) {
+                items.add(chapters[i]);
+                scenes.add(StoryEngine.CHAPTER_STARTS[i]);
+            }
+        }
+        // クリア済みの章がまだなければ、選ぶものがないのでそのまま続きから始めます。
+        if (items.size() == 1) {
+            openStory(true, 0);
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.continue_select_title)
+                .setItems(items.toArray(new String[0]),
+                        (dialog, which) -> openStory(true, scenes.get(which)))
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    // startScene が 0 のときは、保存された位置から続けます。
+    private void openStory(boolean continueGame, int startScene) {
         // 連打でストーリー画面が二重に開かないようにします。onResume で戻します。
         if (opening) {
             return;
@@ -53,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         opening = true;
         Intent intent = new Intent(this, MainActivity2.class);
         intent.putExtra("continue", continueGame);
+        intent.putExtra("startScene", startScene);
         startActivity(intent);
     }
 

@@ -76,7 +76,13 @@ public class MainActivity2 extends AppCompatActivity {
             storyLog.restoreTo(state.scene, state.lineIndex);
             showLineImmediately = true;
         } else if (getIntent().getBooleanExtra("continue", false)) {
-            if (!SaveData.load(this, state)) {
+            // ★変更: 章を選んで始める場合(startScene が有効)は、その章の最初から始める
+            int startScene = getIntent().getIntExtra("startScene", 0);
+            if (StoryEngine.isValidScene(startScene)) {
+                // 選択の記録(おにぎり・リンゴ)は引き継がない。
+                state.reset();
+                state.scene = startScene;
+            } else if (!SaveData.load(this, state)) {
                 state.reset();
                 storyLog.clear();
             } else {
@@ -95,7 +101,7 @@ public class MainActivity2 extends AppCompatActivity {
             if (state.lineIndex < lines.length - 1) {
                 state.lineIndex++;
             } else if (!StoryEngine.hasChoices(state.scene) && !StoryEngine.isEnding(state.scene)) {
-                state.scene = StoryEngine.nextLinear(state.scene);
+                changeScene(StoryEngine.nextLinear(state.scene));   // ★変更
                 state.lineIndex = 0;
             } else {
                 return;
@@ -136,12 +142,22 @@ public class MainActivity2 extends AppCompatActivity {
         // 連打で同じ選択を繰り返さないよう、画面を切り替える前に無効にします。
         choiceA.setEnabled(false);
         choiceB.setEnabled(false);
-        storyLog.recordChoice(state.scene, state.lineIndex, getString(
+storyLog.recordChoice(state.scene, state.lineIndex, getString(
                 choice == StoryEngine.CHOICE_A
-                        ? StoryData.choiceARes(state.scene) : StoryData.choiceBRes(state.scene)));
-        state.scene = StoryEngine.choose(state.scene, choice, state);
+                        ? StoryData.choiceARes(state.scene) :
+StoryData.choiceBRes(state.scene)));
+        changeScene(StoryEngine.choose(state.scene, choice, state));
         state.lineIndex = 0;
         render();
+    }
+
+    // ★追加: 場面を移すときに、クリアした章があれば記録します。
+    private void changeScene(int next) {
+        int cleared = StoryEngine.clearedChapter(state.scene, next);
+        if (cleared > 0) {
+            SaveData.markChapterCleared(this, cleared);
+        }
+        state.scene = next;
     }
 
     private void render() {
