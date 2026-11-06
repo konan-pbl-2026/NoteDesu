@@ -14,6 +14,7 @@ public class SaveData {
                 .putInt("lineIndex", state.lineIndex)
                 .putBoolean("ateOnigiri", state.ateOnigiri)
                 .putBoolean("boughtApple", state.boughtApple)
+                .putString("history", android.text.TextUtils.join(",", state.history))
                 .apply();
     }
 
@@ -32,6 +33,20 @@ public class SaveData {
         state.lineIndex = saved.getInt("lineIndex", 0);
         state.ateOnigiri = saved.getBoolean("ateOnigiri", false);
         state.boughtApple = saved.getBoolean("boughtApple", false);
+        state.history.clear();
+        String csv = saved.getString("history", "");
+        if (!csv.isEmpty()) {
+            for (String part : csv.split(",")) {
+                try {
+                    int past = Integer.parseInt(part.trim());
+                    if (StoryEngine.isValidScene(past)) {
+                        state.history.add(past);
+                    }
+                } catch (NumberFormatException ignored) {
+                    // 壊れた値は読み飛ばします。
+                }
+            }
+        }
         return true;
     }
 

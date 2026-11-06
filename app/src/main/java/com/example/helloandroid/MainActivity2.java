@@ -24,6 +24,9 @@ public class MainActivity2 extends AppCompatActivity {
     private Button choiceA;
     private Button choiceB;
     private Button endButton;
+
+    /**private Button ViewLogs;**/
+
     private View nextIndicator;
     private String[] lines;
     private String body;
@@ -124,10 +127,10 @@ public class MainActivity2 extends AppCompatActivity {
                         .show();
             }
         });
-        // 動作確認用：背景の長押しでログを開く
-        findViewById(R.id.root).setOnLongClickListener(view -> {
+        // ログを開く
+        findViewById(R.id.ViewLogs).setOnClickListener(view -> {
             showStoryLog();
-            return true;
+            //return;
         });
         render();
     }
@@ -216,11 +219,6 @@ public class MainActivity2 extends AppCompatActivity {
         nextIndicator.clearAnimation();
         new StoryLogDialogFragment().showNow(
                 getSupportFragmentManager(), StoryLogDialogFragment.TAG);
-    }
-
-    /** XML の android:onClick="showStoryLog" からも呼び出せます。 */
-    public void showStoryLog(View view) {
-        showStoryLog();
     }
 
     private boolean isStoryLogOpen() {
