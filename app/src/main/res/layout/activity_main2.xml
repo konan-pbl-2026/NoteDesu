@@ -45,32 +45,40 @@
         android:importantForAccessibility="no"
         android:scaleType="fitCenter"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/text1"
+        app:layout_constraintBottom_toTopOf="@id/storyScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 幅は画面に合わせ、高さは文章量と端末の文字サイズに合わせて伸びる -->
-    <TextView
-        android:id="@+id/text1"
-        android:accessibilityLiveRegion="polite"
+    <ScrollView
+        android:id="@+id/storyScroll"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/bg_text_box"
-        android:includeFontPadding="false"
-        android:lineSpacingMultiplier="1.5"
-        android:minLines="4"
-        android:paddingStart="18dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="18dp"
-        android:paddingBottom="22dp"
-        android:textAppearance="@style/TextAppearance.NoteDesu.Story"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.5"
+            android:paddingStart="18dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="22dp"
+            android:textAppearance="@style/TextAppearance.NoteDesu.Story" />
+
+    </ScrollView>
 
     <TextView
         android:id="@+id/speaker"
@@ -88,7 +96,7 @@
         android:textSize="15sp"
         android:translationY="14dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/text1"
+        app:layout_constraintBottom_toTopOf="@id/storyScroll"
         app:layout_constraintStart_toStartOf="@id/text1" />
 
     <LinearLayout
@@ -100,7 +108,7 @@
         android:layout_marginBottom="24dp"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/text1"
+        app:layout_constraintBottom_toTopOf="@id/storyScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -128,7 +136,7 @@
         android:layout_marginBottom="24dp"
         android:text="@string/back_to_title"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/text1"
+        app:layout_constraintBottom_toTopOf="@id/storyScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -143,6 +151,6 @@
         android:textColor="@color/crimson_light"
         android:textSize="12sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/text1"
-        app:layout_constraintEnd_toEndOf="@id/text1" />
+        app:layout_constraintBottom_toBottomOf="@id/storyScroll"
+        app:layout_constraintEnd_toEndOf="@id/storyScroll" />
 </androidx.constraintlayout.widget.ConstraintLayout>

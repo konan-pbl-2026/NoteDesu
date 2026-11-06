@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.ScrollView;
+import java.util.ArrayList;
 
 public class MainActivity2 extends AppCompatActivity {
     private final GameState state = new GameState();
@@ -33,12 +35,17 @@ public class MainActivity2 extends AppCompatActivity {
     private int displayedScene;
     private int displayedCharacter;
 
+    private ScrollView storyScroll;
+    private boolean isUserScrolling = false;
+
+    private ArrayList<String> history = new ArrayList<>();
+
     private final Runnable typeNextCharacter = new Runnable() {
         @Override
         public void run() {
             // サロゲートペアを途中で分けず、絵文字も一文字として表示します。
             visibleCharacters = body.offsetByCodePoints(visibleCharacters, 1);
-            text.setText(body.substring(0, visibleCharacters));
+            updateStoryText(body.substring(0, visibleCharacters));
             if (visibleCharacters < body.length()) {
                 handler.postDelayed(this, 35);
             } else {
@@ -56,6 +63,15 @@ public class MainActivity2 extends AppCompatActivity {
         background = findViewById(R.id.imageView);
         character = findViewById(R.id.character);
         text = findViewById(R.id.text1);
+        storyScroll = findViewById(R.id.storyScroll);
+        storyScroll.setOnScrollChangeListener(
+                (View v, int scrollX, int scrollY,
+                 int oldScrollX, int oldScrollY) -> {
+
+                    // 上にスワイプして過去ログを読んでいるか判定
+                    isUserScrolling = scrollY > 24;
+                }
+        );
         speaker = findViewById(R.id.speaker);
         choices = findViewById(R.id.choices);
         choiceA = findViewById(R.id.choiceA);
@@ -83,11 +99,18 @@ public class MainActivity2 extends AppCompatActivity {
                 return;
             }
             if (state.lineIndex < lines.length - 1) {
+                saveCurrentLineToHistory();
                 state.lineIndex++;
-            } else if (!StoryEngine.hasChoices(state.scene) && !StoryEngine.isEnding(state.scene)) {
+
+            } else if (!StoryEngine.hasChoices(state.scene)
+                    && !StoryEngine.isEnding(state.scene)) {
+
+                saveCurrentLineToHistory();
+
                 state.scene = StoryEngine.nextLinear(state.scene);
                 state.lineIndex = 0;
-            } else {
+
+            }else {
                 return;
             }
             render();
@@ -121,6 +144,7 @@ public class MainActivity2 extends AppCompatActivity {
         // 連打で同じ選択を繰り返さないよう、画面を切り替える前に無効にします。
         choiceA.setEnabled(false);
         choiceB.setEnabled(false);
+        saveCurrentLineToHistory();
         state.scene = StoryEngine.choose(state.scene, choice, state);
         state.lineIndex = 0;
         render();
@@ -129,6 +153,7 @@ public class MainActivity2 extends AppCompatActivity {
     private void render() {
         handler.removeCallbacks(typeNextCharacter);
         typing = false;
+        isUserScrolling = false;
         if (displayedScene != state.scene) {
             background.animate().cancel();
             background.setImageResource(StoryData.backgroundRes(state.scene));
@@ -159,8 +184,11 @@ public class MainActivity2 extends AppCompatActivity {
         }
         String name = StoryLine.speaker(lines[state.lineIndex]);
         speaker.setText(name);
+
         speaker.setVisibility(name.isEmpty() ? View.GONE : View.VISIBLE);
         body = StoryLine.body(lines[state.lineIndex]);
+        // 現在の文章を履歴に保存
+
         // 読み上げでは話す人の名前も一緒に伝えます。
         text.setContentDescription(name.isEmpty() ? null : name + "、" + body);
         choices.setVisibility(View.GONE);
@@ -173,7 +201,7 @@ public class MainActivity2 extends AppCompatActivity {
             showLineImmediately = false;
             finishTyping();
         } else {
-            text.setText("");
+            updateStoryText("");
             visibleCharacters = 0;
             typing = true;
             handler.postDelayed(typeNextCharacter, 35);
@@ -181,6 +209,39 @@ public class MainActivity2 extends AppCompatActivity {
 
         // エンディングの途中で閉じても続きから読めるよう、エンディングも保存します。
         SaveData.save(this, state);
+    }
+    // 今表示している文章を履歴に保存する
+    private void saveCurrentLineToHistory() {
+        if (body == null) return;
+
+        String name = speaker.getText().toString();
+
+        String historyText = name.isEmpty()
+                ? body
+                : name + "\n" + body;
+
+        history.add(historyText);
+    }
+
+    // 履歴と現在の文章をまとめて表示する
+    private void updateStoryText(String currentText) {
+
+        StringBuilder displayText = new StringBuilder();
+
+        // 最新の文章を先に表示
+        displayText.append(currentText);
+
+        // その後ろに過去ログを追加
+        for (int i = history.size() - 1; i >= 0; i--) {
+            displayText.append("\n\n").append(history.get(i));
+        }
+
+        text.setText(displayText.toString());
+
+        // 最新の文章が先頭に来るようにする
+        storyScroll.post(() -> {
+            storyScroll.scrollTo(0, 0);
+        });
     }
 
     private boolean isScreenReaderOn() {
@@ -191,7 +252,7 @@ public class MainActivity2 extends AppCompatActivity {
     private void finishTyping() {
         handler.removeCallbacks(typeNextCharacter);
         typing = false;
-        text.setText(body);
+        updateStoryText(body);
         showLineActions();
     }
 
