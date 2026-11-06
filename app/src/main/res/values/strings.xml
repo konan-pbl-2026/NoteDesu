@@ -13,4 +13,16 @@
     <string name="next_indicator">▼</string>
     <string name="confirm_new_game_title">はじめから始めますか？</string>
     <string name="confirm_new_game_message">保存されている続きのデータは消えます。</string>
+    <string name="continue_select_title">つづきから</string>
+    <string name="continue_from_last">前回の続きから</string>
+    <string name="cancel">キャンセル</string>
+    <!-- StoryEngine.CHAPTER_STARTS と同じ順に並べること -->
+    <string-array name="chapter_titles">
+        <item>第一章　黒いノート</item>
+        <item>第二章　最初の名前</item>
+        <item>第三章　探偵の挑戦</item>
+        <item>第四章　監視の夜</item>
+        <item>第五章　探偵との対面</item>
+        <item>第六章　決断</item>
+    </string-array>
 </resources>
