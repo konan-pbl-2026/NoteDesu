@@ -1,5 +1,6 @@
 package com.example.helloandroid;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity2 extends AppCompatActivity {
     private final GameState state = new GameState();
@@ -36,6 +38,18 @@ public class MainActivity2 extends AppCompatActivity {
     private int displayedScene;
     private int displayedCharacter;
     private StoryLogStore storyLog;
+
+    // ★追加: Auto（自動送り）機能
+    private static final long AUTO_DELAY_MS = 3000;
+    private Button autoButton;
+    private boolean autoMode;
+
+    private final Runnable autoAdvance = () -> {
+        if (!autoMode || typing || isStoryLogOpen()) {
+            return;
+        }
+        advance();
+    };
 
     private final Runnable typeNextCharacter = new Runnable() {
         @Override
@@ -70,12 +84,14 @@ public class MainActivity2 extends AppCompatActivity {
         choiceB = findViewById(R.id.choiceB);
         endButton = findViewById(R.id.endButton);
         nextIndicator = findViewById(R.id.nextIndicator);
+        autoButton = findViewById(R.id.autoButton);
 
         if (savedInstanceState != null) {
             state.scene = savedInstanceState.getInt("scene", StoryEngine.S1_CLASSROOM);
             state.lineIndex = savedInstanceState.getInt("lineIndex", 0);
             state.ateOnigiri = savedInstanceState.getBoolean("ateOnigiri", false);
             state.boughtApple = savedInstanceState.getBoolean("boughtApple", false);
+            autoMode = savedInstanceState.getBoolean("autoMode", false);
             storyLog.restoreTo(state.scene, state.lineIndex);
             showLineImmediately = true;
         } else if (getIntent().getBooleanExtra("continue", false)) {
@@ -101,15 +117,7 @@ public class MainActivity2 extends AppCompatActivity {
                 finishTyping();
                 return;
             }
-            if (state.lineIndex < lines.length - 1) {
-                state.lineIndex++;
-            } else if (!StoryEngine.hasChoices(state.scene) && !StoryEngine.isEnding(state.scene)) {
-                changeScene(StoryEngine.nextLinear(state.scene));   // ★変更
-                state.lineIndex = 0;
-            } else {
-                return;
-            }
-            render();
+            advance();
         });
         choiceA.setOnClickListener(view -> choose(StoryEngine.CHOICE_A));
         choiceB.setOnClickListener(view -> choose(StoryEngine.CHOICE_B));
@@ -138,17 +146,56 @@ public class MainActivity2 extends AppCompatActivity {
             showStoryLog();
             //return;
         });
+        // ★追加: Autoボタン
+        autoButton.setOnClickListener(view -> {
+            autoMode = !autoMode;
+            updateAutoButton();
+            if (autoMode) {
+                scheduleAutoAdvance();
+            } else {
+                handler.removeCallbacks(autoAdvance);
+            }
+        });
+        updateAutoButton();
         render();
+    }
+
+    // ★追加: タップと自動送りの両方から使う「次の行(場面)へ進む」処理
+    private void advance() {
+        if (state.lineIndex < lines.length - 1) {
+            state.lineIndex++;
+        } else if (!StoryEngine.hasChoices(state.scene) && !StoryEngine.isEnding(state.scene)) {
+            changeScene(StoryEngine.nextLinear(state.scene));
+            state.lineIndex = 0;
+        } else {
+            return;
+        }
+        render();
+    }
+
+    // ★追加: 文字が出きって「次へ」が出ているときだけ、3秒後に進める
+    private void scheduleAutoAdvance() {
+        handler.removeCallbacks(autoAdvance);
+        if (autoMode && !typing && nextIndicator.getVisibility() == View.VISIBLE) {
+            handler.postDelayed(autoAdvance, AUTO_DELAY_MS);
+        }
+    }
+
+    // ★追加: ONのときはボタンを赤くする
+    private void updateAutoButton() {
+        int color = autoMode ? R.color.crimson : R.color.black;
+        autoButton.setBackgroundTintList(
+                ColorStateList.valueOf(ContextCompat.getColor(this, color)));
     }
 
     private void choose(int choice) {
         // 連打で同じ選択を繰り返さないよう、画面を切り替える前に無効にします。
         choiceA.setEnabled(false);
         choiceB.setEnabled(false);
-storyLog.recordChoice(state.scene, state.lineIndex, getString(
+        storyLog.recordChoice(state.scene, state.lineIndex, getString(
                 choice == StoryEngine.CHOICE_A
                         ? StoryData.choiceARes(state.scene) :
-StoryData.choiceBRes(state.scene)));
+                        StoryData.choiceBRes(state.scene)));
         changeScene(StoryEngine.choose(state.scene, choice, state));
         state.lineIndex = 0;
         render();
@@ -165,6 +212,7 @@ StoryData.choiceBRes(state.scene)));
 
     private void render() {
         handler.removeCallbacks(typeNextCharacter);
+        handler.removeCallbacks(autoAdvance);
         typing = false;
         if (displayedScene != state.scene) {
             background.animate().cancel();
@@ -232,6 +280,7 @@ StoryData.choiceBRes(state.scene)));
             return;
         }
         handler.removeCallbacks(typeNextCharacter);
+        handler.removeCallbacks(autoAdvance);
         nextIndicator.clearAnimation();
         new StoryLogDialogFragment().showNow(
                 getSupportFragmentManager(), StoryLogDialogFragment.TAG);
@@ -285,10 +334,14 @@ StoryData.choiceBRes(state.scene)));
         } else {
             nextIndicator.clearAnimation();
         }
+
+        // ★追加: 自動送りの3秒タイマーを開始
+        scheduleAutoAdvance();
     }
 
     @Override
     protected void onPause() {
+        handler.removeCallbacks(autoAdvance);
         BgmPlayer.pause();
         super.onPause();
     }
@@ -297,6 +350,7 @@ StoryData.choiceBRes(state.scene)));
     protected void onResume() {
         super.onResume();
         BgmPlayer.resume();
+        scheduleAutoAdvance();
     }
 
     @Override
@@ -314,6 +368,7 @@ StoryData.choiceBRes(state.scene)));
         outState.putInt("lineIndex", state.lineIndex);
         outState.putBoolean("ateOnigiri", state.ateOnigiri);
         outState.putBoolean("boughtApple", state.boughtApple);
+        outState.putBoolean("autoMode", autoMode);
         super.onSaveInstanceState(outState);
     }
 }
