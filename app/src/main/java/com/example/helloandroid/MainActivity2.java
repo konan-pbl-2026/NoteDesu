@@ -23,6 +23,8 @@ public class MainActivity2 extends AppCompatActivity {
     private ImageView character;
     private TextView text;
     private TextView speaker;
+    private TextView chapterTitle;
+    private String[] chapterTitles;
     private View choices;
     private Button choiceA;
     private Button choiceB;
@@ -84,6 +86,8 @@ public class MainActivity2 extends AppCompatActivity {
         character = findViewById(R.id.character);
         text = findViewById(R.id.text1);
         speaker = findViewById(R.id.speaker);
+        chapterTitle = findViewById(R.id.chapterTitle);
+        chapterTitles = getResources().getStringArray(R.array.chapter_titles);
         choices = findViewById(R.id.choices);
         choiceA = findViewById(R.id.choiceA);
         choiceB = findViewById(R.id.choiceB);
@@ -224,6 +228,7 @@ public class MainActivity2 extends AppCompatActivity {
         handler.removeCallbacks(typeNextCharacter);
         handler.removeCallbacks(autoAdvance);
         typing = false;
+        updateChapterTitle();
         if (displayedScene != state.scene) {
             background.animate().cancel();
             background.setImageResource(StoryData.backgroundRes(state.scene));
@@ -278,6 +283,18 @@ public class MainActivity2 extends AppCompatActivity {
 
         // エンディングの途中で閉じても続きから読めるよう、エンディングも保存します。
         SaveData.save(this, state);
+    }
+
+    private void updateChapterTitle() {
+        int chapter = StoryEngine.chapterOf(state.scene);
+        if (chapter > 0 && chapter <= chapterTitles.length) {
+            chapterTitle.setText(chapterTitles[chapter - 1]);
+            chapterTitle.setVisibility(View.VISIBLE);
+        } else {
+            // エンディングは章に属さないため、章タイトルを表示しません。
+            chapterTitle.setText("");
+            chapterTitle.setVisibility(View.GONE);
+        }
     }
 
     private boolean isScreenReaderOn() {
