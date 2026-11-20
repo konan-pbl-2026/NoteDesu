@@ -32,7 +32,10 @@
                 android:layout_height="match_parent"
                 android:divider="@color/text_box_border"
                 android:dividerHeight="1dp"
+                android:fastScrollEnabled="true"
+                android:fastScrollAlwaysVisible="true"
                 android:saveEnabled="true"
+                android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical" />
 
             <TextView
