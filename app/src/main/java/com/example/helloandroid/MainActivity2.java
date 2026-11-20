@@ -136,7 +136,7 @@ public class MainActivity2 extends AppCompatActivity {
         choiceA.setOnClickListener(view -> choose(StoryEngine.CHOICE_A));
         choiceB.setOnClickListener(view -> choose(StoryEngine.CHOICE_B));
         endButton.setOnClickListener(view -> {
-            SaveData.clear(this);
+//            SaveData.clear(this);
             finish();
         });
 
