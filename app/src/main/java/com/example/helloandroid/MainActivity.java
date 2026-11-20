@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button startButton = findViewById(R.id.start);
         continueButton = findViewById(R.id.continueButton);
+        android.util.Log.d("SAVE_CHECK", "continueButton = " + continueButton);
         endingCount = findViewById(R.id.endingCount);
         startButton.setOnClickListener(view -> {
             if (!SaveData.hasSave(MainActivity.this)) {
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         opening = false;
+        android.util.Log.d("SAVE_CHECK", "hasSave = " + SaveData.hasSave(this));
         continueButton.setVisibility(SaveData.hasSave(this) ? View.VISIBLE : View.GONE);
         int seen = SaveData.seenEndingCount(this);
         endingCount.setText(getString(R.string.ending_count, seen, StoryEngine.ENDINGS.length));
