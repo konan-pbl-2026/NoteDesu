@@ -38,6 +38,14 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         });
         continueButton.setOnClickListener(view -> showContinueDialog());
+
+        endingCount.setOnClickListener(view -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    EndingCollectionActivity.class
+            );
+            startActivity(intent);
+        });
     }
 
     // 「前回の続きから」と、クリア済みの章を並べて選ばせます。
@@ -106,5 +114,40 @@ public class MainActivity extends AppCompatActivity {
             BgmPlayer.stop();
         }
         super.onDestroy();
+    }
+
+
+    private void showEndingCollection() {
+
+        String[] names = {
+                "名前を拾わなかった結末",
+                "ニタの支配",
+                "無実の帰還",
+                "逮捕"
+        };
+
+        int[] endings = StoryEngine.ENDINGS;
+
+        StringBuilder message = new StringBuilder();
+
+        for (int i = 0; i < endings.length; i++) {
+
+            message.append("END ").append(String.format("%02d", i + 1))
+                    .append("\n");
+
+            if (SaveData.isEndingSeen(this, endings[i])) {
+                message.append(names[i]);
+            } else {
+                message.append("???");
+            }
+
+            message.append("\n\n");
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("ENDING COLLECTION")
+                .setMessage(message.toString())
+                .setPositiveButton("閉じる", null)
+                .show();
     }
 }

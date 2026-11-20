@@ -95,4 +95,8 @@ public class SaveData {
         }
         return count;
     }
+
+    static boolean isEndingSeen(Context context, int ending) {
+        return preferences(context).getBoolean("ending_" + ending, false);
+    }
 }
