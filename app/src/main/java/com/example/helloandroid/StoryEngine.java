@@ -155,7 +155,6 @@ public class StoryEngine {
     }
 
     public static int resolveEnding(GameState state, boolean destroyedNote) {
-        // 仕様に矛盾があるため、このエンディングの優先順位はチームで確認してください。
         if (state.ateOnigiri || !destroyedNote) {
             return END_ARREST;
         }
