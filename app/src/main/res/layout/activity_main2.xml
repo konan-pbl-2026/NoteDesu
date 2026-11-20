@@ -201,6 +201,28 @@
         app:layout_constraintVertical_bias="0.665"
         app:rippleColor="#D13D3D"
         app:strokeColor="@color/crimson" />
-
+    <!-- 既存の章タイトルを、プレイ中の画面左上に表示する -->
+    <TextView
+        android:id="@+id/chapterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_speaker"
+        android:paddingStart="10dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="6dp"
+        android:textAppearance="@style/TextAppearance.NoteDesu.Story"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="第一章　黒いノート"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
