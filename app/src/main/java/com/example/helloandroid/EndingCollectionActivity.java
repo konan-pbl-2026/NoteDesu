@@ -15,8 +15,8 @@ public class EndingCollectionActivity extends AppCompatActivity {
 
     private final String[] names = {
             "いつもの日常",
-            "黒幕",
             "潔白",
+            "黒幕",
             "逮捕"
     };
 
@@ -29,7 +29,13 @@ public class EndingCollectionActivity extends AppCompatActivity {
         TextView progress = findViewById(R.id.endingProgress);
         TextView backButton = findViewById(R.id.backButton);
 
-        int[] endings = StoryEngine.ENDINGS;
+        // 保存用IDは変更せず、一覧だけを本編のEND番号順に並べます。
+        int[] endings = {
+                StoryEngine.END_NOT_PICKED,
+                StoryEngine.END_INNOCENT,
+                StoryEngine.END_MASTERMIND,
+                StoryEngine.END_ARREST
+        };
         int seen = SaveData.seenEndingCount(this);
 
         progress.setText(seen + " / " + endings.length + " ENDINGS");
