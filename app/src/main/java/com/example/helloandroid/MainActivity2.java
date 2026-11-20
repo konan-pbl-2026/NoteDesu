@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity2 extends AppCompatActivity {
@@ -26,6 +27,10 @@ public class MainActivity2 extends AppCompatActivity {
     private Button choiceA;
     private Button choiceB;
     private Button endButton;
+    private Button logButton;
+    private ConstraintLayout.LayoutParams normalLogButtonLayout;
+    private ConstraintLayout.LayoutParams normalAutoButtonLayout;
+    private boolean controlsAboveChoices;
 
     /**private Button ViewLogs;**/
 
@@ -85,6 +90,11 @@ public class MainActivity2 extends AppCompatActivity {
         endButton = findViewById(R.id.endButton);
         nextIndicator = findViewById(R.id.nextIndicator);
         autoButton = findViewById(R.id.autoButton);
+        logButton = findViewById(R.id.ViewLogs);
+        normalLogButtonLayout = new ConstraintLayout.LayoutParams(
+                (ConstraintLayout.LayoutParams) logButton.getLayoutParams());
+        normalAutoButtonLayout = new ConstraintLayout.LayoutParams(
+                (ConstraintLayout.LayoutParams) autoButton.getLayoutParams());
 
         if (savedInstanceState != null) {
             state.scene = savedInstanceState.getInt("scene", StoryEngine.S1_CLASSROOM);
@@ -250,6 +260,7 @@ public class MainActivity2 extends AppCompatActivity {
         // 読み上げでは話す人の名前も一緒に伝えます。
         text.setContentDescription(name.isEmpty() ? null : name + "、" + body);
         choices.setVisibility(View.GONE);
+        setControlsAboveChoices(false);
         endButton.setVisibility(View.GONE);
         nextIndicator.setVisibility(View.GONE);
         nextIndicator.clearAnimation();
@@ -322,6 +333,7 @@ public class MainActivity2 extends AppCompatActivity {
             choiceA.setEnabled(true);
             choiceB.setEnabled(true);
             choices.setVisibility(View.VISIBLE);
+            setControlsAboveChoices(true);
         } else {
             nextIndicator.setVisibility(View.VISIBLE);
         }
@@ -337,6 +349,30 @@ public class MainActivity2 extends AppCompatActivity {
 
         // ★追加: 自動送りの3秒タイマーを開始
         scheduleAutoAdvance();
+    }
+
+    private void setControlsAboveChoices(boolean aboveChoices) {
+        if (controlsAboveChoices == aboveChoices) {
+            return;
+        }
+        controlsAboveChoices = aboveChoices;
+        setControlPosition(logButton, normalLogButtonLayout, aboveChoices);
+        setControlPosition(autoButton, normalAutoButtonLayout, aboveChoices);
+    }
+
+    private void setControlPosition(Button button, ConstraintLayout.LayoutParams normalLayout,
+                                    boolean aboveChoices) {
+        // 通常時の制約をコピーするので、横位置・大きさは維持し、選択後に元へ戻せます。
+        ConstraintLayout.LayoutParams layout = new ConstraintLayout.LayoutParams(normalLayout);
+        if (aboveChoices) {
+            // 選択肢の高さが変わっても、二つのボタンをその上へ並べます。
+            layout.topToTop = ConstraintLayout.LayoutParams.UNSET;
+            layout.topToBottom = ConstraintLayout.LayoutParams.UNSET;
+            layout.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
+            layout.bottomToTop = R.id.choices;
+            layout.bottomMargin = Math.round(12 * getResources().getDisplayMetrics().density);
+        }
+        button.setLayoutParams(layout);
     }
 
     @Override
